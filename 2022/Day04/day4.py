@@ -10,9 +10,7 @@ with open("input_day4.txt", "r") as f:
 full_overlaps = 0
 partially_overlaps = 0
 for section_pair in data:
-    section1, section2 = section_pair.split(',')
-    s1, e1 = section1.split('-')
-    s2, e2 = section2.split('-')
+    s1, e1, s2, e2 = re.match("(\d+)-(\d+),(\d+)-(\d+)", section_pair).groups()
     s1, e1, s2, e2 = int(s1), int(e1), int(s2), int(e2)
     
     set1 = set(range(s1, e1 + 1))
