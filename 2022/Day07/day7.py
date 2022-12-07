@@ -4,7 +4,7 @@ import re
 
 import numpy as np
 
-# os.chdir('/Users/tobiasmolenaar/Documents/GitHub/AdventofCode/2022/Day04/')
+os.chdir('/Users/tobiasmolenaar/Documents/GitHub/AdventofCode/2022/Day07/')
 with open("input_day7.txt", "r") as f:
     DATA = f.read().split("\n")
 
@@ -32,12 +32,11 @@ def add_directory_to_dict(line: str, dir: list, dic: dict):
     return dic
 
 
-def add_files_to_dict(line: str, dir: list, dic: dict):
+def add_files_to_dict(line: str, dir: list, dic: dict) -> dict:
     size, name = line.split(" ")
     d = dic
     for folder in dir:
         d = d[folder]
-
     if size == "dir":
         d[name] = {}
     else:
@@ -46,56 +45,49 @@ def add_files_to_dict(line: str, dir: list, dic: dict):
 
 
 def make_dictionary(dic: dict, dir: list) -> dict:
-    directories = ["/"]
+    paths = []
     for line in DATA:
-        if line[:3] == "dir":
-            directories.append(line[4:])
         if line[:4] == "$ cd":
             # change directory
             dir = change_directory(line, dir)
             dic = add_directory_to_dict(line, dir, dic)
+            if dir not in paths:
+                paths.append(dir)
         elif line[:4] == "$ ls":
             pass
         else:
             dic = add_files_to_dict(line, dir, dic)
-    return dic, directories
+    return dic, paths
 
 
-def find_by_key1(dic: dict, dir: str):
-    for key, value in dic.items():
-        if key == dir:
-            print(value)
-        elif isinstance(value, dict):
-            find_by_key1(value, dir)
-
-
-def find_by_key(data, target):
-    for k, v in data.items():
-        if k == target:
-            return v
-        elif isinstance(v, dict):
-            return find_by_key(v, target)
-        elif isinstance(v, list):
-            for i in v:
-                if isinstance(i, dict):
-                    return find_by_key(i, target)
-
-
-def sum_directory(dic: dict, dir: str) -> int:
+def sum_directory(dic: dict) -> int:
     som = 0
-
+    for _, value in dic.items():
+        if not isinstance(value, dict):
+            som += value
+        else:
+            som += sum_directory(value)
     return som
 
 
-def sum_directories_at_most(n: int, dirs: list, dic: dict) -> int:
-    som = 0
-    for dir in dirs:
-        s = sum_directory(dic, dir)
-        if s <= n:
-            som += s
-    return som
+def make_list_of_sizes(dic, paths):
+    lst = []
+    for path_to_dir in paths:
+        items = nested_get(dic, path_to_dir)
+        s = sum_directory(items)
+        lst.append(s)
+    return lst
 
 
-dictionary, folders = make_dictionary({}, [])
+dictionary, paths = make_dictionary({}, [])
+lst = make_list_of_sizes(dictionary, paths)
 
-# %%
+# part 1
+print(sum([i for i in lst if i <= 100000]))
+
+# part 2
+total_disk_space = 70_000_000
+update_space = 30_000_000
+needed_space = update_space - (total_disk_space - lst[0])
+
+print(min([i for i in lst if i >= needed_space]))
