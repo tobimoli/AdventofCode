@@ -45,6 +45,9 @@ def change_pos_tail(pos_head, pos_tail):
         elif abs(kolom_verschil) == 1:  # verschillende kolom
             new_pos_tail[1] -= kolom_verschil
             new_pos_tail[0] -= rij_verschil // 2
+        elif abs(kolom_verschil) == 2:
+            new_pos_tail[1] -= kolom_verschil // 2
+            new_pos_tail[0] -= rij_verschil // 2
     pos_tail.append(new_pos_tail)
     return pos_tail
 
@@ -58,30 +61,20 @@ def count_unique_positions(lst: list):
     return len(lst_unique)
 
 
-def main1():
-    pos_tail = [[0, 0]]
-    pos_head = [[0, 0]]
-    for line in DATA:
-        direction, size = line.split(" ")
-        for _ in range(int(size)):
-            pos_head = change_pos_head(pos_head, direction)
-            pos_tail = change_pos_tail(pos_head, pos_tail)
-    
-    print(count_unique_positions(pos_tail))
-
-# part 1
-main1()
-
-# part 2
-
-def main2(n):
+def main(n):
     positions = [[[0, 0]]] * (1 + n)
     for line in DATA:
         direction, size = line.split(" ")
         for _ in range(int(size)):
-            print(positions[0])
-            positions[0] = change_pos_head(positions[0], direction)
+            positions[0] = change_pos_head(positions[0].copy(), direction)
             for tail_nr in range(1, 1 + n):
-                positions[tail_nr] = change_pos_tail(positions[tail_nr - 1], positions[tail_nr])
-    
+                positions[tail_nr] = change_pos_tail(
+                    positions[tail_nr - 1].copy(), positions[tail_nr].copy()
+                )
     print(count_unique_positions(positions[-1]))
+
+
+# part 1
+main(1)
+# part 2
+main(9)
