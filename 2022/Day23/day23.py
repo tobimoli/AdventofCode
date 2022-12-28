@@ -89,9 +89,20 @@ def do_one_round(locs, nr):
 
 def do_rounds(locs, n):
     for i in range(n):
-        print(i)
         locs = do_one_round(locs, i)
     return locs
+
+
+def do_simulation(locs):
+    i = 0
+    condition = True
+    while condition:
+        old_locs = locs
+        # print(f"round {i}")
+        locs = do_one_round(locs, i)
+        condition = sum([loc in old_locs for loc in locs]) < len(old_locs)
+        i += 1
+    return i
 
 
 def main(data):
@@ -101,9 +112,17 @@ def main(data):
     return answer
 
 
+def main2(data):
+    location_elves = read_data(data)
+    rounds = do_simulation(location_elves)
+    return rounds
+
+
 # part 1
 print(main(TEST))
 print(main(DATA))
 
-
+# part 2
+print(main2(TEST))
+print(main2(DATA))
 # %%
