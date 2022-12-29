@@ -14,29 +14,30 @@ with open(f"test_day{DAY}.txt", "r") as f:
 FACING = {"right": 0, "down": 1, "left": 2, "up": 3}
 # FACING_INV = {v: k for k, v in FACING.items()}
 
+
 def make_cube(data, s):
     lst = [[]] * 14
-    lst[0] = [(0, c, FACING['down']) for c in range(1 * s, 2 * s)]
-    lst[1] = [(r, 0, FACING['right']) for r in range(3 * s, 4 * s)]
+    lst[0] = [(0, c, FACING["down"]) for c in range(1 * s, 2 * s)]
+    lst[1] = [(r, 0, FACING["right"]) for r in range(3 * s, 4 * s)]
 
-    lst[2] = [(r, s, FACING['right']) for r in range(1 * s)]
-    lst[3] = [(r, 0, FACING['right']) for r in reversed(range(2 * s, 3 * s))]
+    lst[2] = [(r, s, FACING["right"]) for r in range(1 * s)]
+    lst[3] = [(r, 0, FACING["right"]) for r in reversed(range(2 * s, 3 * s))]
 
-    lst[4] = [(r, s, FACING['right']) for r in range(1 * s, 2 * s)]
-    lst[5] = [(2 * s, c, FACING['down']) for c in range(1 * s)]
+    lst[4] = [(r, s, FACING["right"]) for r in range(1 * s, 2 * s)]
+    lst[5] = [(2 * s, c, FACING["down"]) for c in range(1 * s)]
 
-    lst[6] = [(0, c, FACING['down']) for c in range(2 * s, 3 * s)]
-    lst[7] = [(4 * s - 1, c, FACING['up']) for c in range(1 * s)]
+    lst[6] = [(0, c, FACING["down"]) for c in range(2 * s, 3 * s)]
+    lst[7] = [(4 * s - 1, c, FACING["up"]) for c in range(1 * s)]
 
-    lst[8] = [(r, 3 * s - 1, FACING['left']) for r in range(1 * s)]
-    lst[9] = [(r, 2 * s - 1, FACING['left']) for r in reversed(range(2 * s, 3 * s))]
+    lst[8] = [(r, 3 * s - 1, FACING["left"]) for r in range(1 * s)]
+    lst[9] = [(r, 2 * s - 1, FACING["left"]) for r in reversed(range(2 * s, 3 * s))]
 
-    lst[10] = [(s - 1, c, FACING['up']) for c in range(2 * s, 3 * s)]
-    lst[11] = [(r, 2 * s - 1, FACING['left']) for r in range(1 * s, 2 * s)]
+    lst[10] = [(s - 1, c, FACING["up"]) for c in range(2 * s, 3 * s)]
+    lst[11] = [(r, 2 * s - 1, FACING["left"]) for r in range(1 * s, 2 * s)]
 
-    lst[12] = [(3 * s - 1, c, FACING['up']) for c in range(1 * s, 2 * s)]
-    lst[13] = [(r, s - 1, FACING['left']) for r in range(3 * s, 4 * s)]
-    
+    lst[12] = [(3 * s - 1, c, FACING["up"]) for c in range(1 * s, 2 * s)]
+    lst[13] = [(r, s - 1, FACING["left"]) for r in range(3 * s, 4 * s)]
+
     dic = {}
     for i in range(len(lst)):
         face_new = lst[i][0][2]
@@ -166,7 +167,7 @@ def follow_path(grid, path):
     position = find_start_pos(grid)
     # print(grid, path)
     for item in path:
-        print(item, position)
+        # print(item, position)
         if isinstance(item, int):
             position = move_steps(grid, position, item)
         else:
@@ -189,3 +190,5 @@ print(main(DATA))
 # part 2
 PART2 = True
 print(main(DATA))
+
+# %%

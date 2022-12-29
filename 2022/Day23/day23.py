@@ -3,7 +3,11 @@ import re
 
 import numpy as np
 
+<<<<<<< HEAD
 DAY = str(22)
+=======
+DAY = str(23)
+>>>>>>> 0116d67ed3a0088d45396fa4ea1927d107f2f4c4
 
 # os.chdir(f"/Users/tobiasmolenaar/Documents/GitHub/AdventofCode/2022/Day{DAY}")
 with open(f"input_day{DAY}.txt", "r") as f:
@@ -11,6 +15,7 @@ with open(f"input_day{DAY}.txt", "r") as f:
 with open(f"test_day{DAY}.txt", "r") as f:
     TEST = f.read().split("\n")
 
+<<<<<<< HEAD
 FACING = {"right": 0, "down": 1, "left": 2, "up": 3}
 # FACING_INV = {v: k for k, v in FACING.items()}
 
@@ -183,9 +188,125 @@ def main(data):
 
 # part 1
 PART2 = False
+=======
+
+def print_locs(locs):
+    r_min = c_min = 0
+    for loc in locs:
+        r, c = loc
+        r_min = min(r_min, r)
+        c_min = min(c_min, c)
+
+    grid = np.zeros((6, 6))
+    for loc in locs:
+        r, c = loc
+        grid[(r - r_min, c - c_min)] = 1
+    return grid
+
+
+def read_data(data):
+    location_elves = []
+    for i, line in enumerate(data):
+        for j, item in enumerate(line):
+            if item == "#":
+                location_elves.append((i, j))
+    return location_elves
+
+
+def compute_answer(locs):
+    row_min, row_max = None, None
+    col_min, col_max = None, None
+    for loc in locs:
+        row, col = loc
+        row_min = row if row_min is None else min(row_min, row)
+        row_max = row if row_max is None else max(row_max, row)
+        col_min = row if col_min is None else min(col_min, col)
+        col_max = row if col_max is None else max(col_max, col)
+    rows = row_max - row_min + 1
+    cols = col_max - col_min + 1
+    cells = rows * cols
+    empty_cells = cells - len(locs)
+    return empty_cells
+
+
+def check_surrounding(loc, locs, nr):
+    row, col = loc
+    n_locs = [(row - 1, col + i) for i in [-1, 0, 1]]
+    s_locs = [(row + 1, col + i) for i in [-1, 0, 1]]
+    e_locs = [(row + i, col + 1) for i in [-1, 0, 1]]
+    w_locs = [(row + i, col - 1) for i in [-1, 0, 1]]
+
+    all_locs = n_locs + s_locs + e_locs + w_locs
+    check_all = [loc in locs for loc in all_locs]
+    if sum(check_all) == 0:
+        return loc
+    else:
+        dic = {0: n_locs, 1: s_locs, 2: w_locs, 3: e_locs}
+        for i in range(nr, nr + 4):
+            i_locs = dic[i % 4]
+            check = [loc in locs for loc in i_locs]
+            if sum(check) == 0:
+                return i_locs[1]
+    return loc
+
+
+def do_one_round(locs, nr):
+    # eerst helft, kijk waar elven heen willen
+    proposed_locs = []
+    for loc in locs:
+        proposed_locs.append(check_surrounding(loc, locs, nr))
+    # tweede helft
+    final_locs = []
+    for idx, p_loc in enumerate(proposed_locs):
+        if sum([p_loc == loc for loc in proposed_locs]) == 1:
+            final_locs.append(p_loc)
+        else:
+            final_locs.append(locs[idx])
+    return final_locs
+
+
+def do_rounds(locs, n):
+    for i in range(n):
+        locs = do_one_round(locs, i)
+    return locs
+
+
+def do_simulation(locs):
+    i = 0
+    condition = True
+    while condition:
+        old_locs = locs
+        # print(f"round {i}")
+        locs = do_one_round(locs, i)
+        condition = sum([loc in old_locs for loc in locs]) < len(old_locs)
+        i += 1
+    return i
+
+
+def main(data):
+    location_elves = read_data(data)
+    location_elves = do_rounds(location_elves, 10)
+    answer = compute_answer(location_elves)
+    return answer
+
+
+def main2(data):
+    location_elves = read_data(data)
+    rounds = do_simulation(location_elves)
+    return rounds
+
+
+# part 1
+>>>>>>> 0116d67ed3a0088d45396fa4ea1927d107f2f4c4
 print(main(TEST))
 print(main(DATA))
 
 # part 2
+<<<<<<< HEAD
 PART2 = True
 print(main(DATA))
+=======
+print(main2(TEST))
+print(main2(DATA))
+# %%
+>>>>>>> 0116d67ed3a0088d45396fa4ea1927d107f2f4c4
