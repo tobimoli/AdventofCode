@@ -15,7 +15,7 @@ with open(f"test_day{DAY}.txt", "r") as f:
 def find_start(data):
     toprow = 0
     column = data[toprow].index(".")
-    return [(toprow, column)]
+    return (toprow, column)
 
 
 def get_initial_blizzards(data):
@@ -25,20 +25,6 @@ def get_initial_blizzards(data):
             if is_blizzard(direction):
                 blizzards.append((idx, idy, direction))
     return blizzards
-
-
-def read_data(data):
-    grid = []
-    for line in data:
-        grid.append(list(line))
-    return grid
-
-
-def get_empty_grid(data):
-    grid = []
-    for line in data:
-        grid.append([i if i == "#" else [] for i in list(line)])
-    return grid
 
 
 def is_blizzard(item):
@@ -86,6 +72,7 @@ def move_blizzard(blizzard):
 
 
 def get_possible_moves(blizzards, position, grid):
+    grid_size = [len(grid), len(grid[0])]
     possible_moves = []
     blizzard_locations = [(i[0], i[1]) for i in blizzards]
     steps = [(0, 1), (-1, 0), (0, -1), (1, 0), (0, 0)]
@@ -93,8 +80,9 @@ def get_possible_moves(blizzards, position, grid):
     for check_position in check_positions:
         if check_position not in blizzard_locations:
             x, y = check_position
-            if grid[x][y] != "#":
-                possible_moves.append(check_position)
+            if (x >= 0) and (x < grid_size[0]) & (y >= 0) & (y < grid_size[1]):
+                if grid[x][y] != "#":
+                    possible_moves.append(check_position)
     return possible_moves
 
 
@@ -110,17 +98,26 @@ def reached_end(end, positions):
     return False
 
 
-def simulation(data, steps=None):
+def simulation(data):
     # initial values
-    positions = find_start(data)
+    start = find_start(data)
     end = find_end(data)
     blizzards = get_initial_blizzards(data)
-    empty_grid = get_empty_grid(data)
 
     # do simulation
-    step = 0
+    blizzards, step1 = simulate(start, end, data, blizzards)
+    print(step1)
+    blizzards, step2 = simulate(end, start, data, blizzards)
+    print(step2)
+    blizzards, step3 = simulate(start, end, data, blizzards)
+    print(step3)
+
+    return step1 + step2 + step3
+
+
+def simulate(start, end, empty_grid, blizzards, step=0):
+    positions = [start]
     while not reached_end(end, positions):
-        print(step, len(positions))
         blizzards = get_next_blizzards(blizzards)
         new_positions = []
         for position in positions:
@@ -128,10 +125,7 @@ def simulation(data, steps=None):
         positions = set(new_positions)
 
         step += 1
-        if isinstance(steps, int):
-            if step >= steps:
-                break
-    return step
+    return blizzards, step
 
 
 def main(data):
@@ -139,13 +133,9 @@ def main(data):
     return answer
 
 
-# part 1
 data = DATA
 
 ONDER, RECHTS = len(data) - 1, len(data[0]) - 1
 print(main(data))
 
-# part 2
-# print(main2(TEST))
-# print(main2(DATA))
 # %%
