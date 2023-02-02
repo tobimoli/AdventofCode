@@ -11,6 +11,8 @@ with open(f"input_day{DAY}.txt", "r") as f:
 with open(f"test_day{DAY}.txt", "r") as f:
     TEST = f.read().split("\n")
 
+# hallop
+
 def character_convert(character):
     if character == '2':
         return 2
