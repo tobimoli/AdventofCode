@@ -1,6 +1,4 @@
 file = "input"
-# file = "example"
-
 
 f = open(f'{file}.txt', 'r')
 data = f.read().split('\n')
