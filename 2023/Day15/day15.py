@@ -24,3 +24,21 @@ for g in data:
     current = hash(g)
     som += current
 print(som)
+
+# part 2
+boxes = [{} for _ in range(256)]
+
+for g in data:
+    if "-" in g:
+        label = g.split("-")[0]
+    else:
+        label = g.split("=")[0]
+    box = boxes[hash(label)]
+    if '=' in g: 
+        box[label] = int(g.split('=')[1])
+    else: 
+        box.pop(label, None)
+
+print(sum((k+1)*(i+1)*v 
+            for k, v in enumerate(boxes) 
+            for i, v in enumerate(v.values())))
