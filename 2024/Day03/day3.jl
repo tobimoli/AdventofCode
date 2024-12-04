@@ -2,9 +2,11 @@ file = "/Users/tobiasmolenaar/Documents/GitHub/AdventofCode/2024/Day03/input_day
 
 using DelimitedFiles
 
+println("part1")
 global total = 0
 for i in eachline(file)
     for j in findall("mul(", i)
+        is_correct = true
         start = j[end] + 1
         digit1 = ""
         for k in [0, 1, 2]
@@ -14,11 +16,10 @@ for i in eachline(file)
             end
         end
         if digit1 == ""
-            break
+            is_correct = false
         end
-
         if i[start+len] != ','
-            break
+            is_correct = false
         end
 
         start = j[end] + len + 2
@@ -30,17 +31,14 @@ for i in eachline(file)
             end
         end
         if digit2 == ""
-            break
+            is_correct = false
         end
-
         if i[start+len] != ')'
-            break
+            is_correct = false
         end
-        println("")
-        println(digit1)
-        println(digit2)
-        println(digit1 * digit2)
-        global total += digit1 * digit2
+        if is_correct
+            global total += digit1 * digit2
+        end
     end
 end
 println(total)
